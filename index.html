@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>管理画面 | BOOK BUYERS ADMIN</title>
+  <title>管理画面 | 書籍買い回り</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1278,7 +1278,7 @@
           <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
         </svg>
       </div>
-      <div class="login-logo">BOOK <span>BUYERS</span></div>
+      <div class="login-logo">書籍<span>買い回り</span></div>
       <div class="login-subtitle">管理画面ログイン</div>
       <div class="login-error" id="loginError">パスワードが正しくありません</div>
       <form class="login-form" onsubmit="handleLogin(event)">
@@ -1304,7 +1304,7 @@
           <line x1="3" y1="18" x2="21" y2="18"></line>
         </svg>
       </button>
-      <div class="login-logo">BOOK <span>BUYERS</span></div>
+      <div class="login-logo">書籍<span>買い回り</span></div>
       <div style="width: 24px;"></div>
     </div>
 
@@ -1320,7 +1320,7 @@
             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
           </svg>
         </div>
-        <div class="sidebar-logo">BOOK <span>BUYERS</span></div>
+        <div class="sidebar-logo">書籍<span>買い回り</span></div>
       </div>
       <div class="sidebar-subtitle">管理画面</div>
       
@@ -1363,6 +1363,16 @@
               <line x1="6" y1="20" x2="6" y2="14"></line>
             </svg>
             集計一覧
+          </a>
+        </li>
+        <li class="nav-item" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee;">
+          <a class="nav-link" href="https://book-buyers.pages.dev/" target="_blank">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            会員側を確認
           </a>
         </li>
       </ul>
@@ -1859,6 +1869,40 @@
       }, 3000);
     }
 
+    // Session management (6 hours)
+    const SESSION_DURATION = 6 * 60 * 60 * 1000; // 6時間（ミリ秒）
+    
+    function checkSession() {
+      const loginTime = localStorage.getItem('adminLoginTime');
+      if (loginTime) {
+        const elapsed = Date.now() - parseInt(loginTime);
+        if (elapsed < SESSION_DURATION) {
+          // セッション有効 - 自動ログイン
+          document.getElementById('loginScreen').style.display = 'none';
+          document.getElementById('mainApp').classList.add('active');
+          init();
+          return true;
+        } else {
+          // セッション期限切れ
+          localStorage.removeItem('adminLoginTime');
+        }
+      }
+      return false;
+    }
+    
+    function saveSession() {
+      localStorage.setItem('adminLoginTime', Date.now().toString());
+    }
+    
+    function clearSession() {
+      localStorage.removeItem('adminLoginTime');
+    }
+
+    // ページ読み込み時にセッションチェック
+    document.addEventListener('DOMContentLoaded', function() {
+      checkSession();
+    });
+
     // Initialize
     async function init() {
       // Set default dates
@@ -1890,6 +1934,7 @@
         const result = await response.json();
         
         if (result.success) {
+          saveSession(); // セッション保存
           document.getElementById('loginScreen').style.display = 'none';
           document.getElementById('mainApp').classList.add('active');
           init();
@@ -1907,6 +1952,7 @@
     }
 
     function handleLogout() {
+      clearSession(); // セッションクリア
       document.getElementById('mainApp').classList.remove('active');
       document.getElementById('loginScreen').style.display = 'flex';
       document.getElementById('loginPassword').value = '';
