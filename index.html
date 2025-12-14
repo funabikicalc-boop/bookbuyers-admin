@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
       --primary: #F5E6A3;
@@ -36,28 +35,6 @@
       background: var(--primary-light);
       min-height: 100vh;
       color: var(--text);
-    }
-
-    /* Lucide icon styling */
-    .lucide {
-      width: 20px;
-      height: 20px;
-      stroke-width: 2;
-    }
-
-    .lucide-sm {
-      width: 16px;
-      height: 16px;
-    }
-
-    .lucide-lg {
-      width: 24px;
-      height: 24px;
-    }
-
-    .lucide-xl {
-      width: 32px;
-      height: 32px;
     }
 
     /* Login Screen */
@@ -91,10 +68,11 @@
       margin: 0 auto 1rem;
     }
 
-    .login-logo-icon .lucide {
+    .login-logo-icon svg {
       width: 32px;
       height: 32px;
-      color: var(--text);
+      stroke: var(--text);
+      fill: none;
     }
 
     .login-logo {
@@ -205,6 +183,13 @@
       justify-content: center;
     }
 
+    .sidebar-logo-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--text);
+      fill: none;
+    }
+
     .sidebar-logo {
       font-family: 'Outfit', sans-serif;
       font-weight: 700;
@@ -253,6 +238,13 @@
       color: var(--text);
     }
 
+    .nav-link svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+    }
+
     .logout-btn {
       display: flex;
       align-items: center;
@@ -274,6 +266,13 @@
       background: rgba(229, 115, 115, 0.1);
     }
 
+    .logout-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+    }
+
     /* Main Content */
     .main-content {
       margin-left: 260px;
@@ -283,6 +282,15 @@
 
     .page-header {
       margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .page-header-left {
+      flex: 1;
     }
 
     .page-title {
@@ -293,6 +301,13 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+
+    .page-title svg {
+      width: 28px;
+      height: 28px;
+      stroke: currentColor;
+      fill: none;
     }
 
     .page-subtitle {
@@ -325,9 +340,15 @@
       margin-bottom: 1rem;
     }
 
+    .stat-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      fill: none;
+    }
+
     .stat-icon.yellow { background: var(--primary); color: var(--text); }
     .stat-icon.green { background: rgba(124, 184, 124, 0.2); color: #5a9a5a; }
-    .stat-icon.blue { background: rgba(100, 181, 246, 0.2); color: #1976d2; }
     .stat-icon.orange { background: rgba(212, 165, 116, 0.2); color: var(--accent-dark); }
 
     .stat-value {
@@ -379,6 +400,13 @@
       color: var(--text);
     }
 
+    .action-icon svg {
+      width: 32px;
+      height: 32px;
+      stroke: currentColor;
+      fill: none;
+    }
+
     .action-title {
       font-weight: 700;
       font-size: 1.1rem;
@@ -390,7 +418,7 @@
       font-size: 0.85rem;
     }
 
-    /* Recent Activity */
+    /* Activity Card */
     .activity-card {
       background: var(--white);
       border-radius: 16px;
@@ -405,6 +433,13 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+
+    .activity-header svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
     }
 
     .activity-list {
@@ -434,10 +469,12 @@
       justify-content: center;
       font-weight: 700;
       font-size: 0.85rem;
+      flex-shrink: 0;
     }
 
     .activity-info {
       flex: 1;
+      min-width: 0;
     }
 
     .activity-text {
@@ -451,6 +488,13 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+
+    .activity-time svg {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      fill: none;
     }
 
     .activity-badge {
@@ -474,117 +518,33 @@
       display: block;
     }
 
-    /* Product Registration */
-    .product-form-card {
-      background: var(--white);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      padding: 2rem;
-      max-width: 800px;
-    }
-
-    .form-section {
-      margin-bottom: 2rem;
-    }
-
-    .form-section-title {
-      font-weight: 700;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 0.875rem 1rem;
-      border: 2px solid #eee;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-family: 'Noto Sans JP', sans-serif;
-      transition: border-color 0.2s;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .image-upload {
-      border: 2px dashed #ddd;
-      border-radius: 12px;
-      padding: 2rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: var(--primary-light);
-    }
-
-    .image-upload:hover {
-      border-color: var(--accent);
-    }
-
-    .image-upload-icon {
-      margin-bottom: 1rem;
-      color: var(--accent);
-    }
-
-    .image-upload-text {
-      color: var(--text-light);
-      font-size: 0.9rem;
-    }
-
-    .image-preview {
-      width: 150px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-top: 1rem;
-      display: none;
-    }
-
-    .submit-btn {
+    /* Primary Button */
+    .primary-btn {
       background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
       color: var(--white);
       border: none;
-      padding: 1rem 2rem;
+      padding: 0.875rem 1.5rem;
       border-radius: 12px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
       font-family: 'Noto Sans JP', sans-serif;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 0.5rem;
     }
 
-    .submit-btn:hover {
+    .primary-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+    }
+
+    .primary-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
     }
 
     /* Product List */
@@ -593,7 +553,6 @@
       border-radius: 16px;
       box-shadow: var(--shadow);
       overflow: hidden;
-      margin-top: 2rem;
     }
 
     .product-list-header {
@@ -609,6 +568,13 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+
+    .product-list-title svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
     }
 
     .product-table {
@@ -637,9 +603,13 @@
     .product-thumb {
       width: 50px;
       height: 70px;
-      object-fit: cover;
       border-radius: 6px;
-      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 0.5rem;
+      font-weight: 700;
     }
 
     .status-badge {
@@ -677,6 +647,14 @@
       display: flex;
       align-items: center;
       gap: 0.25rem;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .action-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
     }
 
     .action-btn.edit {
@@ -687,6 +665,225 @@
     .action-btn.delete {
       background: rgba(229, 115, 115, 0.2);
       color: #c74747;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(61, 52, 36, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--white);
+      border-radius: 24px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .modal-title svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      fill: none;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-light);
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      border-radius: 8px;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      background: var(--primary-light);
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    /* Form */
+    .form-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-section-title {
+      font-weight: 700;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-section-title svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .form-group label .required {
+      color: var(--danger);
+    }
+
+    .form-group label .optional {
+      color: var(--text-light);
+      font-weight: 400;
+      font-size: 0.8rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-hint {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 0.25rem;
+    }
+
+    .image-upload {
+      border: 2px dashed #ddd;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--primary-light);
+    }
+
+    .image-upload:hover {
+      border-color: var(--accent);
+    }
+
+    .image-upload-icon {
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+    }
+
+    .image-upload-icon svg {
+      width: 32px;
+      height: 32px;
+      stroke: currentColor;
+      fill: none;
+    }
+
+    .image-upload-text {
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+
+    .image-preview {
+      max-width: 150px;
+      max-height: 200px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color: var(--white);
+      border: none;
+      padding: 1rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Noto Sans JP', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
     }
 
     /* Analytics */
@@ -716,12 +913,25 @@
       gap: 0.25rem;
     }
 
+    .filter-group label svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+    }
+
     .filter-group input,
     .filter-group select {
       padding: 0.75rem 1rem;
       border: 2px solid #eee;
       border-radius: 10px;
       font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+      outline: none;
+      border-color: var(--accent);
     }
 
     .filter-btn {
@@ -736,6 +946,13 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+
+    .filter-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
     }
 
     .tabs {
@@ -756,6 +973,13 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+
+    .tab svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
     }
 
     .tab.active {
@@ -793,6 +1017,14 @@
       background: var(--primary-light);
     }
 
+    .analytics-table tr.clickable {
+      cursor: pointer;
+    }
+
+    .analytics-table tr.selected {
+      background: var(--primary);
+    }
+
     /* Region breakdown */
     .region-breakdown {
       margin-top: 2rem;
@@ -800,6 +1032,11 @@
       border-radius: 16px;
       box-shadow: var(--shadow);
       padding: 1.5rem;
+      display: none;
+    }
+
+    .region-breakdown.active {
+      display: block;
     }
 
     .region-title {
@@ -810,9 +1047,16 @@
       gap: 0.5rem;
     }
 
+    .region-title svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+    }
+
     .region-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       gap: 1rem;
     }
 
@@ -872,6 +1116,13 @@
         padding: 0.5rem;
       }
 
+      .menu-toggle svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--text);
+        fill: none;
+      }
+
       .sidebar-overlay {
         position: fixed;
         top: 0;
@@ -900,6 +1151,11 @@
         display: none;
       }
     }
+
+    /* Table Responsive */
+    .table-responsive {
+      overflow-x: auto;
+    }
   </style>
 </head>
 <body>
@@ -907,7 +1163,10 @@
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
       <div class="login-logo-icon">
-        <i data-lucide="book-open"></i>
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
       </div>
       <div class="login-logo">BOOK <span>BUYERS</span></div>
       <div class="login-subtitle">管理画面ログイン</div>
@@ -917,7 +1176,6 @@
           <input type="password" id="loginPassword" placeholder="パスワードを入力" required>
         </div>
         <button type="submit" class="login-btn">
-          <i data-lucide="log-in"></i>
           ログイン
         </button>
       </form>
@@ -929,7 +1187,11 @@
     <!-- Mobile Header -->
     <div class="mobile-header">
       <button class="menu-toggle" onclick="toggleSidebar()">
-        <i data-lucide="menu" class="lucide-lg"></i>
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
       </button>
       <div class="login-logo">BOOK <span>BUYERS</span></div>
       <div style="width: 24px;"></div>
@@ -942,7 +1204,10 @@
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo-icon">
-          <i data-lucide="book-open"></i>
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
         </div>
         <div class="sidebar-logo">BOOK <span>BUYERS</span></div>
       </div>
@@ -950,27 +1215,44 @@
       
       <ul class="nav-menu">
         <li class="nav-item">
-          <a class="nav-link active" onclick="showPage('dashboard', this)">
-            <i data-lucide="layout-dashboard"></i>
+          <a class="nav-link active" onclick="showPage('dashboard')">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
             ダッシュボード
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" onclick="showPage('products', this)">
-            <i data-lucide="package-plus"></i>
-            商品登録
+          <a class="nav-link" onclick="showPage('products')">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+            商品の登録・編集
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" onclick="showPage('analytics', this)">
-            <i data-lucide="bar-chart-3"></i>
+          <a class="nav-link" onclick="showPage('analytics')">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
             集計一覧
           </a>
         </li>
       </ul>
 
       <button class="logout-btn" onclick="handleLogout()">
-        <i data-lucide="log-out"></i>
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
         ログアウト
       </button>
     </aside>
@@ -980,38 +1262,48 @@
       <!-- Dashboard -->
       <div class="page-content active" id="page-dashboard">
         <div class="page-header">
-          <h1 class="page-title">
-            <i data-lucide="layout-dashboard"></i>
-            ダッシュボード
-          </h1>
-          <p class="page-subtitle">本日の状況をひと目で確認</p>
+          <div class="page-header-left">
+            <h1 class="page-title">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              ダッシュボード
+            </h1>
+            <p class="page-subtitle">本日の状況をひと目で確認</p>
+          </div>
         </div>
 
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-icon yellow">
-              <i data-lucide="file-text" class="lucide-lg"></i>
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
             </div>
             <div class="stat-value">127</div>
             <div class="stat-label">本日の申込数</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon green">
-              <i data-lucide="book-copy" class="lucide-lg"></i>
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
             </div>
             <div class="stat-value">342</div>
             <div class="stat-label">本日の総冊数</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon blue">
-              <i data-lucide="users" class="lucide-lg"></i>
-            </div>
-            <div class="stat-value">89</div>
-            <div class="stat-label">本日の会員数</div>
-          </div>
-          <div class="stat-card">
             <div class="stat-icon orange">
-              <i data-lucide="bookmark" class="lucide-lg"></i>
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+              </svg>
             </div>
             <div class="stat-value">5</div>
             <div class="stat-label">受付中の商品</div>
@@ -1019,18 +1311,26 @@
         </div>
 
         <div class="quick-actions">
-          <a class="action-card" onclick="showPage('products', document.querySelector('.nav-link:nth-child(1)'))">
+          <a class="action-card" onclick="showPage('products')">
             <div class="action-icon">
-              <i data-lucide="package-plus" class="lucide-xl"></i>
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+              </svg>
             </div>
             <div>
               <div class="action-title">商品登録</div>
               <div class="action-desc">新しい買取対象本を登録</div>
             </div>
           </a>
-          <a class="action-card" onclick="showPage('analytics', document.querySelector('.nav-link:nth-child(2)'))">
+          <a class="action-card" onclick="showPage('analytics')">
             <div class="action-icon">
-              <i data-lucide="bar-chart-3" class="lucide-xl"></i>
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
             </div>
             <div>
               <div class="action-title">集計一覧</div>
@@ -1041,7 +1341,9 @@
 
         <div class="activity-card">
           <div class="activity-header">
-            <i data-lucide="activity"></i>
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
             最近の申込
           </div>
           <div class="activity-list">
@@ -1050,9 +1352,15 @@
               <div class="activity-info">
                 <div class="activity-text"><strong>山田太郎</strong>さんが「人工知能は人間を超えるか」を3冊申込</div>
                 <div class="activity-time">
-                  <i data-lucide="clock" class="lucide-sm"></i>
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
                   5分前
-                  <i data-lucide="map-pin" class="lucide-sm"></i>
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
                   東京都
                 </div>
               </div>
@@ -1063,9 +1371,15 @@
               <div class="activity-info">
                 <div class="activity-text"><strong>佐藤花子</strong>さんが「嫌われる勇気」を2冊申込</div>
                 <div class="activity-time">
-                  <i data-lucide="clock" class="lucide-sm"></i>
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
                   12分前
-                  <i data-lucide="map-pin" class="lucide-sm"></i>
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
                   大阪府
                 </div>
               </div>
@@ -1076,34 +1390,16 @@
               <div class="activity-info">
                 <div class="activity-text"><strong>鈴木一郎</strong>さんが「FACTFULNESS」を4冊申込</div>
                 <div class="activity-time">
-                  <i data-lucide="clock" class="lucide-sm"></i>
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
                   23分前
-                  <i data-lucide="map-pin" class="lucide-sm"></i>
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
                   神奈川県
-                </div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-avatar">田</div>
-              <div class="activity-info">
-                <div class="activity-text"><strong>田中美咲</strong>さんが「ゼロから作るDeep Learning」を1冊申込</div>
-                <div class="activity-time">
-                  <i data-lucide="clock" class="lucide-sm"></i>
-                  35分前
-                  <i data-lucide="map-pin" class="lucide-sm"></i>
-                  愛知県
-                </div>
-              </div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-avatar">高</div>
-              <div class="activity-info">
-                <div class="activity-text"><strong>高橋健太</strong>さんが「人工知能は人間を超えるか」を2冊申込</div>
-                <div class="activity-time">
-                  <i data-lucide="clock" class="lucide-sm"></i>
-                  48分前
-                  <i data-lucide="map-pin" class="lucide-sm"></i>
-                  福岡県
                 </div>
               </div>
             </div>
@@ -1114,202 +1410,133 @@
       <!-- Products Page -->
       <div class="page-content" id="page-products">
         <div class="page-header">
-          <h1 class="page-title">
-            <i data-lucide="package-plus"></i>
-            商品登録
-          </h1>
-          <p class="page-subtitle">買取対象の本を登録・管理</p>
-        </div>
-
-        <div class="product-form-card">
-          <form onsubmit="handleProductSubmit(event)">
-            <div class="form-section">
-              <div class="form-section-title">
-                <i data-lucide="book"></i>
-                基本情報
-              </div>
-              <div class="form-group">
-                <label>本のタイトル *</label>
-                <input type="text" placeholder="例: 人工知能は人間を超えるか" required>
-              </div>
-              <div class="form-group">
-                <label>Amazonリンク</label>
-                <input type="url" placeholder="https://www.amazon.co.jp/...">
-              </div>
-              <div class="form-group">
-                <label>表紙画像</label>
-                <div class="image-upload" onclick="document.getElementById('imageInput').click()">
-                  <div class="image-upload-icon">
-                    <i data-lucide="image-plus" class="lucide-xl"></i>
-                  </div>
-                  <div class="image-upload-text">クリックまたはドラッグで画像をアップロード<br>JPG, PNG形式（最大5MB）</div>
-                  <img class="image-preview" id="imagePreview" alt="プレビュー">
-                </div>
-                <input type="file" id="imageInput" accept="image/*" style="display: none" onchange="previewImage(event)">
-              </div>
-            </div>
-
-            <div class="form-section">
-              <div class="form-section-title">
-                <i data-lucide="calendar"></i>
-                受付期間
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>受付開始日 *</label>
-                  <input type="date" required>
-                </div>
-                <div class="form-group">
-                  <label>受付停止日 *</label>
-                  <input type="date" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-section">
-              <div class="form-section-title">
-                <i data-lucide="sliders-horizontal"></i>
-                上限設定
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>平日の上限冊数（/日）*</label>
-                  <input type="number" min="1" placeholder="例: 20" required>
-                </div>
-                <div class="form-group">
-                  <label>土日祝の上限冊数（/日）*</label>
-                  <input type="number" min="1" placeholder="例: 30" required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>1人あたりの上限冊数（/日）*</label>
-                <input type="number" min="1" placeholder="例: 3" required>
-              </div>
-            </div>
-
-            <button type="submit" class="submit-btn">
-              <i data-lucide="plus-circle"></i>
-              商品を登録する
-            </button>
-          </form>
+          <div class="page-header-left">
+            <h1 class="page-title">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              </svg>
+              商品の登録・編集
+            </h1>
+            <p class="page-subtitle">買取対象の本を登録・管理</p>
+          </div>
+          <button class="primary-btn" onclick="openProductModal()">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="16"></line>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            商品を登録する
+          </button>
         </div>
 
         <div class="product-list">
           <div class="product-list-header">
             <div class="product-list-title">
-              <i data-lucide="list"></i>
-              登録済み商品
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+              登録済み商品一覧
             </div>
           </div>
-          <table class="product-table">
-            <thead>
-              <tr>
-                <th>画像</th>
-                <th>タイトル</th>
-                <th>受付期間</th>
-                <th>平日上限</th>
-                <th>休日上限</th>
-                <th>1人上限</th>
-                <th>ステータス</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><img src="https://picsum.photos/seed/book1/100/140" class="product-thumb"></td>
-                <td>人工知能は人間を超えるか</td>
-                <td>12/1 〜 12/31</td>
-                <td>20冊</td>
-                <td>30冊</td>
-                <td>3冊</td>
-                <td><span class="status-badge active"><i data-lucide="check-circle" class="lucide-sm"></i> 受付中</span></td>
-                <td>
-                  <div class="action-btns">
-                    <button class="action-btn edit"><i data-lucide="pencil" class="lucide-sm"></i> 編集</button>
-                    <button class="action-btn delete"><i data-lucide="pause" class="lucide-sm"></i> 停止</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><img src="https://picsum.photos/seed/book2/100/140" class="product-thumb"></td>
-                <td>ゼロから作るDeep Learning</td>
-                <td>12/1 〜 12/31</td>
-                <td>10冊</td>
-                <td>15冊</td>
-                <td>2冊</td>
-                <td><span class="status-badge active"><i data-lucide="check-circle" class="lucide-sm"></i> 受付中</span></td>
-                <td>
-                  <div class="action-btns">
-                    <button class="action-btn edit"><i data-lucide="pencil" class="lucide-sm"></i> 編集</button>
-                    <button class="action-btn delete"><i data-lucide="pause" class="lucide-sm"></i> 停止</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><img src="https://picsum.photos/seed/book3/100/140" class="product-thumb"></td>
-                <td>嫌われる勇気</td>
-                <td>11/15 〜 12/15</td>
-                <td>15冊</td>
-                <td>20冊</td>
-                <td>3冊</td>
-                <td><span class="status-badge active"><i data-lucide="check-circle" class="lucide-sm"></i> 受付中</span></td>
-                <td>
-                  <div class="action-btns">
-                    <button class="action-btn edit"><i data-lucide="pencil" class="lucide-sm"></i> 編集</button>
-                    <button class="action-btn delete"><i data-lucide="pause" class="lucide-sm"></i> 停止</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="product-table">
+              <thead>
+                <tr>
+                  <th>画像</th>
+                  <th>タイトル</th>
+                  <th>受付期間</th>
+                  <th>平日上限</th>
+                  <th>休日上限</th>
+                  <th>1人上限</th>
+                  <th>ステータス</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <!-- Analytics Page -->
       <div class="page-content" id="page-analytics">
         <div class="page-header">
-          <h1 class="page-title">
-            <i data-lucide="bar-chart-3"></i>
-            集計一覧
-          </h1>
-          <p class="page-subtitle">申込データの確認・集計</p>
+          <div class="page-header-left">
+            <h1 class="page-title">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              集計一覧
+            </h1>
+            <p class="page-subtitle">申込データの確認・集計</p>
+          </div>
         </div>
 
         <div class="analytics-filters">
           <div class="filter-group">
-            <label><i data-lucide="calendar" class="lucide-sm"></i> 期間（開始）</label>
-            <input type="date" value="2024-12-01">
+            <label>
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              期間（開始）
+            </label>
+            <input type="date" id="filterStartDate">
           </div>
           <div class="filter-group">
-            <label><i data-lucide="calendar" class="lucide-sm"></i> 期間（終了）</label>
-            <input type="date" value="2024-12-13">
-          </div>
-          <div class="filter-group">
-            <label><i data-lucide="book" class="lucide-sm"></i> 商品</label>
-            <select>
-              <option value="">すべて</option>
-              <option>人工知能は人間を超えるか</option>
-              <option>ゼロから作るDeep Learning</option>
-              <option>嫌われる勇気</option>
-            </select>
+            <label>
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              期間（終了）
+            </label>
+            <input type="date" id="filterEndDate">
           </div>
           <button class="filter-btn">
-            <i data-lucide="search"></i>
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
             絞り込み
           </button>
         </div>
 
         <div class="tabs">
-          <button class="tab active" onclick="showTab('daily', this)">
-            <i data-lucide="calendar-days"></i>
+          <button class="tab active" onclick="showAnalyticsTab('daily', this)">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
             日別
           </button>
-          <button class="tab" onclick="showTab('byBook', this)">
-            <i data-lucide="book-open"></i>
+          <button class="tab" onclick="showAnalyticsTab('byBook', this)">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
             本別
           </button>
-          <button class="tab" onclick="showTab('byMember', this)">
-            <i data-lucide="user"></i>
+          <button class="tab" onclick="showAnalyticsTab('byMember', this)">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
             会員別
           </button>
         </div>
@@ -1323,40 +1550,10 @@
                   <th>日付</th>
                   <th>申込件数</th>
                   <th>総冊数</th>
-                  <th>会員数</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>2024/12/13</td>
-                  <td>127件</td>
-                  <td>342冊</td>
-                  <td>89人</td>
-                </tr>
-                <tr>
-                  <td>2024/12/12</td>
-                  <td>98件</td>
-                  <td>278冊</td>
-                  <td>72人</td>
-                </tr>
-                <tr>
-                  <td>2024/12/11</td>
-                  <td>115件</td>
-                  <td>310冊</td>
-                  <td>85人</td>
-                </tr>
-                <tr>
-                  <td>2024/12/10</td>
-                  <td>89件</td>
-                  <td>245冊</td>
-                  <td>67人</td>
-                </tr>
-                <tr>
-                  <td>2024/12/09</td>
-                  <td>102件</td>
-                  <td>289冊</td>
-                  <td>78人</td>
-                </tr>
+              <tbody id="dailyTableBody">
+                <!-- Rendered by JS -->
               </tbody>
             </table>
           </div>
@@ -1371,76 +1568,24 @@
                   <th>商品名</th>
                   <th>総申込数</th>
                   <th>総冊数</th>
-                  <th>会員数</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>人工知能は人間を超えるか</td>
-                  <td>234件</td>
-                  <td>612冊</td>
-                  <td>178人</td>
-                </tr>
-                <tr>
-                  <td>ゼロから作るDeep Learning</td>
-                  <td>156件</td>
-                  <td>298冊</td>
-                  <td>134人</td>
-                </tr>
-                <tr>
-                  <td>嫌われる勇気</td>
-                  <td>189件</td>
-                  <td>445冊</td>
-                  <td>156人</td>
-                </tr>
-                <tr>
-                  <td>FACTFULNESS</td>
-                  <td>145件</td>
-                  <td>378冊</td>
-                  <td>112人</td>
-                </tr>
+              <tbody id="byBookTableBody">
+                <!-- Rendered by JS -->
               </tbody>
             </table>
           </div>
 
-          <div class="region-breakdown">
+          <div class="region-breakdown" id="regionBreakdown">
             <div class="region-title">
-              <i data-lucide="map-pin"></i>
-              地域別内訳（人工知能は人間を超えるか）
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span id="regionBookTitle">地域別内訳</span>
             </div>
-            <div class="region-grid">
-              <div class="region-item">
-                <div class="region-name">東京都</div>
-                <div class="region-count">156</div>
-              </div>
-              <div class="region-item">
-                <div class="region-name">大阪府</div>
-                <div class="region-count">89</div>
-              </div>
-              <div class="region-item">
-                <div class="region-name">神奈川県</div>
-                <div class="region-count">78</div>
-              </div>
-              <div class="region-item">
-                <div class="region-name">愛知県</div>
-                <div class="region-count">67</div>
-              </div>
-              <div class="region-item">
-                <div class="region-name">福岡県</div>
-                <div class="region-count">54</div>
-              </div>
-              <div class="region-item">
-                <div class="region-name">埼玉県</div>
-                <div class="region-count">48</div>
-              </div>
-              <div class="region-item">
-                <div class="region-name">千葉県</div>
-                <div class="region-count">43</div>
-              </div>
-              <div class="region-item">
-                <div class="region-name">その他</div>
-                <div class="region-count">77</div>
-              </div>
+            <div class="region-grid" id="regionGrid">
+              <!-- Rendered by JS -->
             </div>
           </div>
         </div>
@@ -1458,42 +1603,8 @@
                   <th>主な地域</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>M12345</td>
-                  <td>山田太郎</td>
-                  <td>15回</td>
-                  <td>42冊</td>
-                  <td>東京都</td>
-                </tr>
-                <tr>
-                  <td>M23456</td>
-                  <td>佐藤花子</td>
-                  <td>12回</td>
-                  <td>35冊</td>
-                  <td>大阪府</td>
-                </tr>
-                <tr>
-                  <td>M34567</td>
-                  <td>鈴木一郎</td>
-                  <td>11回</td>
-                  <td>31冊</td>
-                  <td>神奈川県</td>
-                </tr>
-                <tr>
-                  <td>M45678</td>
-                  <td>田中美咲</td>
-                  <td>9回</td>
-                  <td>24冊</td>
-                  <td>愛知県</td>
-                </tr>
-                <tr>
-                  <td>M56789</td>
-                  <td>高橋健太</td>
-                  <td>8回</td>
-                  <td>22冊</td>
-                  <td>福岡県</td>
-                </tr>
+              <tbody id="byMemberTableBody">
+                <!-- Rendered by JS -->
               </tbody>
             </table>
           </div>
@@ -1502,20 +1613,189 @@
     </main>
   </div>
 
+  <!-- Product Modal -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          <span id="productModalTitle">商品を登録</span>
+        </div>
+        <button class="modal-close" onclick="closeProductModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="productForm" onsubmit="handleProductSubmit(event)">
+          <div class="form-section">
+            <div class="form-section-title">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+              基本情報
+            </div>
+            <div class="form-group">
+              <label>本のタイトル <span class="required">*</span></label>
+              <input type="text" id="productTitle" placeholder="例: 人工知能は人間を超えるか" required>
+            </div>
+            <div class="form-group">
+              <label>Amazonリンク <span class="required">*</span></label>
+              <input type="url" id="productLink" placeholder="https://www.amazon.co.jp/..." required>
+            </div>
+            <div class="form-group">
+              <label>表紙画像 <span class="required">*</span></label>
+              <div class="image-upload" onclick="document.getElementById('productImage').click()">
+                <div class="image-upload-icon">
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+                <div class="image-upload-text">クリックで画像をアップロード<br>JPG, PNG形式</div>
+                <img class="image-preview" id="imagePreview" alt="プレビュー">
+              </div>
+              <input type="file" id="productImage" accept="image/*" style="display: none" onchange="previewImage(event)" required>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              受付期間
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>受付開始日 <span class="required">*</span></label>
+                <input type="date" id="productStartDate" required>
+              </div>
+              <div class="form-group">
+                <label>受付停止日 <span class="optional">（任意）</span></label>
+                <input type="date" id="productEndDate">
+                <div class="form-hint">空欄の場合は無期限で受付</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="21" x2="4" y2="14"></line>
+                <line x1="4" y1="10" x2="4" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12" y2="3"></line>
+                <line x1="20" y1="21" x2="20" y2="16"></line>
+                <line x1="20" y1="12" x2="20" y2="3"></line>
+                <line x1="1" y1="14" x2="7" y2="14"></line>
+                <line x1="9" y1="8" x2="15" y2="8"></line>
+                <line x1="17" y1="16" x2="23" y2="16"></line>
+              </svg>
+              上限設定 <span class="optional">（任意）</span>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>平日の上限冊数（/日）</label>
+                <input type="number" id="productWeekdayLimit" min="1" placeholder="例: 20">
+                <div class="form-hint">空欄の場合は上限なし</div>
+              </div>
+              <div class="form-group">
+                <label>土日祝の上限冊数（/日）</label>
+                <input type="number" id="productWeekendLimit" min="1" placeholder="例: 30">
+                <div class="form-hint">空欄の場合は上限なし</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>1人あたりの上限冊数（/日）</label>
+              <input type="number" id="productPersonLimit" min="1" placeholder="例: 3">
+              <div class="form-hint">空欄の場合は上限なし</div>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            登録する
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Initialize Lucide icons
-    lucide.createIcons();
+    // Get today's date
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+
+    // Sample data
+    const bookColors = [
+      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+    ];
+
+    const sampleProducts = [
+      { id: 1, title: '人工知能は人間を超えるか', color: bookColors[0], startDate: '2025-12-01', endDate: '2025-12-31', weekdayLimit: 20, weekendLimit: 30, personLimit: 3, status: 'active' },
+      { id: 2, title: 'ゼロから作るDeep Learning', color: bookColors[1], startDate: '2025-12-01', endDate: '2025-12-31', weekdayLimit: 10, weekendLimit: 15, personLimit: 2, status: 'active' },
+      { id: 3, title: '嫌われる勇気', color: bookColors[2], startDate: '2025-11-15', endDate: '2025-12-15', weekdayLimit: 15, weekendLimit: 20, personLimit: 3, status: 'active' },
+      { id: 4, title: 'FACTFULNESS', color: bookColors[3], startDate: '2025-12-01', endDate: null, weekdayLimit: null, weekendLimit: null, personLimit: null, status: 'active' },
+      { id: 5, title: 'サピエンス全史', color: bookColors[4], startDate: '2025-11-01', endDate: '2025-11-30', weekdayLimit: 10, weekendLimit: 15, personLimit: 2, status: 'inactive' }
+    ];
+
+    const sampleDailyData = [
+      { date: '2025/12/14', orders: 127, books: 342 },
+      { date: '2025/12/13', orders: 98, books: 278 },
+      { date: '2025/12/12', orders: 115, books: 310 },
+      { date: '2025/12/11', orders: 89, books: 245 },
+      { date: '2025/12/10', orders: 102, books: 289 }
+    ];
+
+    const sampleBookData = [
+      { id: 1, title: '人工知能は人間を超えるか', orders: 234, books: 612, regions: { '東京都': 156, '大阪府': 89, '神奈川県': 78, '愛知県': 67, '福岡県': 54, '埼玉県': 48, '千葉県': 43, 'その他': 77 } },
+      { id: 2, title: 'ゼロから作るDeep Learning', orders: 156, books: 298, regions: { '東京都': 98, '大阪府': 56, '神奈川県': 34, '愛知県': 28, '福岡県': 22, 'その他': 60 } },
+      { id: 3, title: '嫌われる勇気', orders: 189, books: 445, regions: { '東京都': 120, '大阪府': 78, '神奈川県': 56, '愛知県': 45, '福岡県': 38, 'その他': 108 } },
+      { id: 4, title: 'FACTFULNESS', orders: 145, books: 378, regions: { '東京都': 89, '大阪府': 67, '神奈川県': 45, '愛知県': 38, '福岡県': 32, 'その他': 107 } }
+    ];
+
+    const sampleMemberData = [
+      { memberId: 'M12345', name: '山田太郎', orders: 15, books: 42, region: '東京都' },
+      { memberId: 'M23456', name: '佐藤花子', orders: 12, books: 35, region: '大阪府' },
+      { memberId: 'M34567', name: '鈴木一郎', orders: 11, books: 31, region: '神奈川県' },
+      { memberId: 'M45678', name: '田中美咲', orders: 9, books: 24, region: '愛知県' },
+      { memberId: 'M56789', name: '高橋健太', orders: 8, books: 22, region: '福岡県' }
+    ];
+
+    let selectedBookForRegion = null;
+
+    // Initialize
+    function init() {
+      // Set default dates
+      document.getElementById('filterStartDate').value = todayStr;
+      document.getElementById('filterEndDate').value = todayStr;
+      document.getElementById('productStartDate').value = todayStr;
+      
+      renderProductTable();
+      renderDailyTable();
+      renderByBookTable();
+      renderByMemberTable();
+    }
 
     // Login
     function handleLogin(e) {
       e.preventDefault();
       const password = document.getElementById('loginPassword').value;
       
-      // Simple password check (in production, this would be server-side)
       if (password === 'admin123') {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('mainApp').classList.add('active');
-        lucide.createIcons();
+        init();
       } else {
         alert('パスワードが正しくありません');
       }
@@ -1528,30 +1808,19 @@
     }
 
     // Navigation
-    function showPage(pageId, clickedLink) {
-      // Update nav links
+    function showPage(pageId) {
+      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-      });
-      
-      // Find and activate the correct nav link
-      document.querySelectorAll('.nav-link').forEach(link => {
-        if (link.textContent.includes(pageId === 'dashboard' ? 'ダッシュボード' : pageId === 'products' ? '商品登録' : '集計一覧')) {
+        if (link.textContent.includes(pageId === 'dashboard' ? 'ダッシュボード' : pageId === 'products' ? '商品の登録・編集' : '集計一覧')) {
           link.classList.add('active');
         }
       });
 
-      // Show page content
-      document.querySelectorAll('.page-content').forEach(page => {
-        page.classList.remove('active');
-      });
+      document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
       document.getElementById(`page-${pageId}`).classList.add('active');
 
-      // Close sidebar on mobile
       document.getElementById('sidebar').classList.remove('active');
       document.getElementById('sidebarOverlay').classList.remove('active');
-      
-      lucide.createIcons();
     }
 
     function toggleSidebar() {
@@ -1559,7 +1828,85 @@
       document.getElementById('sidebarOverlay').classList.toggle('active');
     }
 
-    // Image preview
+    // Product Table
+    function renderProductTable() {
+      const tbody = document.getElementById('productTableBody');
+      tbody.innerHTML = sampleProducts.map(product => {
+        const endDateStr = product.endDate ? formatDate(product.endDate) : '無期限';
+        const weekdayStr = product.weekdayLimit ? `${product.weekdayLimit}冊` : '上限なし';
+        const weekendStr = product.weekendLimit ? `${product.weekendLimit}冊` : '上限なし';
+        const personStr = product.personLimit ? `${product.personLimit}冊` : '上限なし';
+        
+        return `
+          <tr>
+            <td><div class="product-thumb" style="background: ${product.color};">${product.title.substring(0, 4)}</div></td>
+            <td>${product.title}</td>
+            <td>${formatDate(product.startDate)} 〜 ${endDateStr}</td>
+            <td>${weekdayStr}</td>
+            <td>${weekendStr}</td>
+            <td>${personStr}</td>
+            <td><span class="status-badge ${product.status}">${product.status === 'active' ? '受付中' : '停止中'}</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn edit" onclick="editProduct(${product.id})">
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  編集
+                </button>
+                <button class="action-btn delete" onclick="toggleProductStatus(${product.id})">
+                  ${product.status === 'active' ? '停止' : '再開'}
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      return `${d.getMonth() + 1}/${d.getDate()}`;
+    }
+
+    // Product Modal
+    function openProductModal() {
+      document.getElementById('productModalTitle').textContent = '商品を登録';
+      document.getElementById('productForm').reset();
+      document.getElementById('productStartDate').value = todayStr;
+      document.getElementById('imagePreview').style.display = 'none';
+      document.getElementById('productModal').classList.add('active');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productModal').classList.remove('active');
+    }
+
+    function editProduct(id) {
+      const product = sampleProducts.find(p => p.id === id);
+      if (!product) return;
+
+      document.getElementById('productModalTitle').textContent = '商品を編集';
+      document.getElementById('productTitle').value = product.title;
+      document.getElementById('productStartDate').value = product.startDate;
+      document.getElementById('productEndDate').value = product.endDate || '';
+      document.getElementById('productWeekdayLimit').value = product.weekdayLimit || '';
+      document.getElementById('productWeekendLimit').value = product.weekendLimit || '';
+      document.getElementById('productPersonLimit').value = product.personLimit || '';
+      
+      document.getElementById('productModal').classList.add('active');
+    }
+
+    function toggleProductStatus(id) {
+      const product = sampleProducts.find(p => p.id === id);
+      if (product) {
+        product.status = product.status === 'active' ? 'inactive' : 'active';
+        renderProductTable();
+      }
+    }
+
     function previewImage(e) {
       const file = e.target.files[0];
       if (file) {
@@ -1573,28 +1920,89 @@
       }
     }
 
-    // Product form
     function handleProductSubmit(e) {
       e.preventDefault();
       alert('商品を登録しました！（デモ）');
+      closeProductModal();
     }
 
-    // Analytics tabs
-    function showTab(tabId, clickedTab) {
-      // Update tab buttons
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.remove('active');
-      });
+    // Analytics
+    function showAnalyticsTab(tabId, clickedTab) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       clickedTab.classList.add('active');
 
-      // Show tab content
-      document.querySelectorAll('.tab-content').forEach(content => {
-        content.style.display = 'none';
-      });
+      document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
       document.getElementById(`tab-${tabId}`).style.display = 'block';
-      
-      lucide.createIcons();
+
+      // Reset region breakdown when switching tabs
+      if (tabId !== 'byBook') {
+        document.getElementById('regionBreakdown').classList.remove('active');
+        selectedBookForRegion = null;
+      }
     }
+
+    function renderDailyTable() {
+      const tbody = document.getElementById('dailyTableBody');
+      tbody.innerHTML = sampleDailyData.map(row => `
+        <tr>
+          <td>${row.date}</td>
+          <td>${row.orders}件</td>
+          <td>${row.books}冊</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderByBookTable() {
+      const tbody = document.getElementById('byBookTableBody');
+      tbody.innerHTML = sampleBookData.map(row => `
+        <tr class="clickable" onclick="selectBookForRegion(${row.id})">
+          <td>${row.title}</td>
+          <td>${row.orders}件</td>
+          <td>${row.books}冊</td>
+        </tr>
+      `).join('');
+    }
+
+    function selectBookForRegion(bookId) {
+      const book = sampleBookData.find(b => b.id === bookId);
+      if (!book) return;
+
+      selectedBookForRegion = bookId;
+
+      // Highlight selected row
+      document.querySelectorAll('#byBookTableBody tr').forEach(tr => tr.classList.remove('selected'));
+      event.currentTarget.classList.add('selected');
+
+      // Show region breakdown
+      document.getElementById('regionBookTitle').textContent = `地域別内訳：${book.title}`;
+      const regionGrid = document.getElementById('regionGrid');
+      regionGrid.innerHTML = Object.entries(book.regions).map(([region, count]) => `
+        <div class="region-item">
+          <div class="region-name">${region}</div>
+          <div class="region-count">${count}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('regionBreakdown').classList.add('active');
+    }
+
+    function renderByMemberTable() {
+      const tbody = document.getElementById('byMemberTableBody');
+      tbody.innerHTML = sampleMemberData.map(row => `
+        <tr>
+          <td>${row.memberId}</td>
+          <td>${row.name}</td>
+          <td>${row.orders}回</td>
+          <td>${row.books}冊</td>
+          <td>${row.region}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Close modal on overlay click
+    document.getElementById('productModal').addEventListener('click', function(e) {
+      if (e.target === this) closeProductModal();
+    });
   </script>
 </body>
 </html>
