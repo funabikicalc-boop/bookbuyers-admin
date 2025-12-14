@@ -92,6 +92,17 @@
       font-size: 0.9rem;
     }
 
+    .login-error {
+      background: rgba(229, 115, 115, 0.1);
+      border: 1px solid var(--danger);
+      color: #c74747;
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      display: none;
+    }
+
     .login-form .form-group {
       margin-bottom: 1.5rem;
       text-align: left;
@@ -131,15 +142,17 @@
       cursor: pointer;
       transition: all 0.3s ease;
       font-family: 'Noto Sans JP', sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
     }
 
     .login-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+    }
+
+    .login-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
     }
 
     /* Main App */
@@ -313,6 +326,27 @@
     .page-subtitle {
       color: var(--text-light);
       font-size: 0.9rem;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-light);
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--primary);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     /* Dashboard */
@@ -604,12 +638,20 @@
       width: 50px;
       height: 70px;
       border-radius: 6px;
+      background: var(--primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--white);
+      color: var(--text);
       font-size: 0.5rem;
       font-weight: 700;
+      overflow: hidden;
+    }
+
+    .product-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .status-badge {
@@ -662,9 +704,9 @@
       color: var(--text);
     }
 
-    .action-btn.delete {
-      background: rgba(229, 115, 115, 0.2);
-      color: #c74747;
+    .action-btn.toggle {
+      background: rgba(100, 181, 246, 0.2);
+      color: #1976d2;
     }
 
     /* Modal */
@@ -884,6 +926,12 @@
     .submit-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 15px rgba(212, 165, 116, 0.4);
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
     }
 
     /* Analytics */
@@ -1170,12 +1218,13 @@
       </div>
       <div class="login-logo">BOOK <span>BUYERS</span></div>
       <div class="login-subtitle">管理画面ログイン</div>
+      <div class="login-error" id="loginError">パスワードが正しくありません</div>
       <form class="login-form" onsubmit="handleLogin(event)">
         <div class="form-group">
           <label>パスワード</label>
           <input type="password" id="loginPassword" placeholder="パスワードを入力" required>
         </div>
-        <button type="submit" class="login-btn">
+        <button type="submit" class="login-btn" id="loginBtn">
           ログイン
         </button>
       </form>
@@ -1229,8 +1278,6 @@
           <a class="nav-link" onclick="showPage('products')">
             <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-              <line x1="12" y1="22.08" x2="12" y2="12"></line>
             </svg>
             商品の登録・編集
           </a>
@@ -1282,11 +1329,9 @@
               <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
               </svg>
             </div>
-            <div class="stat-value">127</div>
+            <div class="stat-value" id="statOrders">-</div>
             <div class="stat-label">本日の申込数</div>
           </div>
           <div class="stat-card">
@@ -1296,7 +1341,7 @@
                 <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
               </svg>
             </div>
-            <div class="stat-value">342</div>
+            <div class="stat-value" id="statBooks">-</div>
             <div class="stat-label">本日の総冊数</div>
           </div>
           <div class="stat-card">
@@ -1305,7 +1350,7 @@
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
               </svg>
             </div>
-            <div class="stat-value">5</div>
+            <div class="stat-value" id="statActiveBooks">-</div>
             <div class="stat-label">受付中の商品</div>
           </div>
         </div>
@@ -1346,62 +1391,10 @@
             </svg>
             最近の申込
           </div>
-          <div class="activity-list">
-            <div class="activity-item">
-              <div class="activity-avatar">山</div>
-              <div class="activity-info">
-                <div class="activity-text"><strong>山田太郎</strong>さんが「人工知能は人間を超えるか」を3冊申込</div>
-                <div class="activity-time">
-                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
-                  5分前
-                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  東京都
-                </div>
-              </div>
-              <span class="activity-badge new">NEW</span>
-            </div>
-            <div class="activity-item">
-              <div class="activity-avatar">佐</div>
-              <div class="activity-info">
-                <div class="activity-text"><strong>佐藤花子</strong>さんが「嫌われる勇気」を2冊申込</div>
-                <div class="activity-time">
-                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
-                  12分前
-                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  大阪府
-                </div>
-              </div>
-              <span class="activity-badge new">NEW</span>
-            </div>
-            <div class="activity-item">
-              <div class="activity-avatar">鈴</div>
-              <div class="activity-info">
-                <div class="activity-text"><strong>鈴木一郎</strong>さんが「FACTFULNESS」を4冊申込</div>
-                <div class="activity-time">
-                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
-                  23分前
-                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  神奈川県
-                </div>
-              </div>
+          <div class="activity-list" id="recentOrdersList">
+            <div class="loading">
+              <div class="loading-spinner"></div>
+              <div>読み込み中...</div>
             </div>
           </div>
         </div>
@@ -1436,9 +1429,6 @@
                 <line x1="8" y1="6" x2="21" y2="6"></line>
                 <line x1="8" y1="12" x2="21" y2="12"></line>
                 <line x1="8" y1="18" x2="21" y2="18"></line>
-                <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                <line x1="3" y1="18" x2="3.01" y2="18"></line>
               </svg>
               登録済み商品一覧
             </div>
@@ -1458,7 +1448,14 @@
                 </tr>
               </thead>
               <tbody id="productTableBody">
-                <!-- Rendered by JS -->
+                <tr>
+                  <td colspan="8">
+                    <div class="loading">
+                      <div class="loading-spinner"></div>
+                      <div>読み込み中...</div>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -1483,30 +1480,14 @@
 
         <div class="analytics-filters">
           <div class="filter-group">
-            <label>
-              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              期間（開始）
-            </label>
+            <label>期間（開始）</label>
             <input type="date" id="filterStartDate">
           </div>
           <div class="filter-group">
-            <label>
-              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              期間（終了）
-            </label>
+            <label>期間（終了）</label>
             <input type="date" id="filterEndDate">
           </div>
-          <button class="filter-btn">
+          <button class="filter-btn" onclick="loadAnalytics()">
             <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -1516,29 +1497,9 @@
         </div>
 
         <div class="tabs">
-          <button class="tab active" onclick="showAnalyticsTab('daily', this)">
-            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            日別
-          </button>
-          <button class="tab" onclick="showAnalyticsTab('byBook', this)">
-            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-            </svg>
-            本別
-          </button>
-          <button class="tab" onclick="showAnalyticsTab('byMember', this)">
-            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            会員別
-          </button>
+          <button class="tab active" onclick="showAnalyticsTab('daily', this)">日別</button>
+          <button class="tab" onclick="showAnalyticsTab('byBook', this)">本別</button>
+          <button class="tab" onclick="showAnalyticsTab('byMember', this)">会員別</button>
         </div>
 
         <!-- Daily Tab -->
@@ -1553,7 +1514,7 @@
                 </tr>
               </thead>
               <tbody id="dailyTableBody">
-                <!-- Rendered by JS -->
+                <tr><td colspan="3" class="loading">読み込み中...</td></tr>
               </tbody>
             </table>
           </div>
@@ -1571,7 +1532,7 @@
                 </tr>
               </thead>
               <tbody id="byBookTableBody">
-                <!-- Rendered by JS -->
+                <tr><td colspan="3" class="loading">読み込み中...</td></tr>
               </tbody>
             </table>
           </div>
@@ -1584,9 +1545,7 @@
               </svg>
               <span id="regionBookTitle">地域別内訳</span>
             </div>
-            <div class="region-grid" id="regionGrid">
-              <!-- Rendered by JS -->
-            </div>
+            <div class="region-grid" id="regionGrid"></div>
           </div>
         </div>
 
@@ -1604,7 +1563,7 @@
                 </tr>
               </thead>
               <tbody id="byMemberTableBody">
-                <!-- Rendered by JS -->
+                <tr><td colspan="5" class="loading">読み込み中...</td></tr>
               </tbody>
             </table>
           </div>
@@ -1629,14 +1588,10 @@
       </div>
       <div class="modal-body">
         <form id="productForm" onsubmit="handleProductSubmit(event)">
+          <input type="hidden" id="editingBookId">
+          
           <div class="form-section">
-            <div class="form-section-title">
-              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-              </svg>
-              基本情報
-            </div>
+            <div class="form-section-title">基本情報</div>
             <div class="form-group">
               <label>本のタイトル <span class="required">*</span></label>
               <input type="text" id="productTitle" placeholder="例: 人工知能は人間を超えるか" required>
@@ -1658,20 +1613,13 @@
                 <div class="image-upload-text">クリックで画像をアップロード<br>JPG, PNG形式</div>
                 <img class="image-preview" id="imagePreview" alt="プレビュー">
               </div>
-              <input type="file" id="productImage" accept="image/*" style="display: none" onchange="previewImage(event)" required>
+              <input type="file" id="productImage" accept="image/*" style="display: none" onchange="previewImage(event)">
+              <div class="form-hint">※画像保存用フォルダが未設定の場合、画像はアップロードできません</div>
             </div>
           </div>
 
           <div class="form-section">
-            <div class="form-section-title">
-              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              受付期間
-            </div>
+            <div class="form-section-title">受付期間</div>
             <div class="form-row">
               <div class="form-group">
                 <label>受付開始日 <span class="required">*</span></label>
@@ -1686,20 +1634,7 @@
           </div>
 
           <div class="form-section">
-            <div class="form-section-title">
-              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="4" y1="21" x2="4" y2="14"></line>
-                <line x1="4" y1="10" x2="4" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12" y2="3"></line>
-                <line x1="20" y1="21" x2="20" y2="16"></line>
-                <line x1="20" y1="12" x2="20" y2="3"></line>
-                <line x1="1" y1="14" x2="7" y2="14"></line>
-                <line x1="9" y1="8" x2="15" y2="8"></line>
-                <line x1="17" y1="16" x2="23" y2="16"></line>
-              </svg>
-              上限設定 <span class="optional">（任意）</span>
-            </div>
+            <div class="form-section-title">上限設定 <span class="optional">（任意）</span></div>
             <div class="form-row">
               <div class="form-group">
                 <label>平日の上限冊数（/日）</label>
@@ -1719,7 +1654,7 @@
             </div>
           </div>
 
-          <button type="submit" class="submit-btn">
+          <button type="submit" class="submit-btn" id="productSubmitBtn">
             登録する
           </button>
         </form>
@@ -1728,76 +1663,61 @@
   </div>
 
   <script>
+    // API URL
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwRDmvv7VPUDtvmuEmazkV659fKd__kweTRqWMbsrEqCCadqfZsqGyPFML4a07eBbw7/exec';
+
     // Get today's date
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
 
-    // Sample data
-    const bookColors = [
-      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
-    ];
-
-    const sampleProducts = [
-      { id: 1, title: '人工知能は人間を超えるか', color: bookColors[0], startDate: '2025-12-01', endDate: '2025-12-31', weekdayLimit: 20, weekendLimit: 30, personLimit: 3, status: 'active' },
-      { id: 2, title: 'ゼロから作るDeep Learning', color: bookColors[1], startDate: '2025-12-01', endDate: '2025-12-31', weekdayLimit: 10, weekendLimit: 15, personLimit: 2, status: 'active' },
-      { id: 3, title: '嫌われる勇気', color: bookColors[2], startDate: '2025-11-15', endDate: '2025-12-15', weekdayLimit: 15, weekendLimit: 20, personLimit: 3, status: 'active' },
-      { id: 4, title: 'FACTFULNESS', color: bookColors[3], startDate: '2025-12-01', endDate: null, weekdayLimit: null, weekendLimit: null, personLimit: null, status: 'active' },
-      { id: 5, title: 'サピエンス全史', color: bookColors[4], startDate: '2025-11-01', endDate: '2025-11-30', weekdayLimit: 10, weekendLimit: 15, personLimit: 2, status: 'inactive' }
-    ];
-
-    const sampleDailyData = [
-      { date: '2025/12/14', orders: 127, books: 342 },
-      { date: '2025/12/13', orders: 98, books: 278 },
-      { date: '2025/12/12', orders: 115, books: 310 },
-      { date: '2025/12/11', orders: 89, books: 245 },
-      { date: '2025/12/10', orders: 102, books: 289 }
-    ];
-
-    const sampleBookData = [
-      { id: 1, title: '人工知能は人間を超えるか', orders: 234, books: 612, regions: { '東京都': 156, '大阪府': 89, '神奈川県': 78, '愛知県': 67, '福岡県': 54, '埼玉県': 48, '千葉県': 43, 'その他': 77 } },
-      { id: 2, title: 'ゼロから作るDeep Learning', orders: 156, books: 298, regions: { '東京都': 98, '大阪府': 56, '神奈川県': 34, '愛知県': 28, '福岡県': 22, 'その他': 60 } },
-      { id: 3, title: '嫌われる勇気', orders: 189, books: 445, regions: { '東京都': 120, '大阪府': 78, '神奈川県': 56, '愛知県': 45, '福岡県': 38, 'その他': 108 } },
-      { id: 4, title: 'FACTFULNESS', orders: 145, books: 378, regions: { '東京都': 89, '大阪府': 67, '神奈川県': 45, '愛知県': 38, '福岡県': 32, 'その他': 107 } }
-    ];
-
-    const sampleMemberData = [
-      { memberId: 'M12345', name: '山田太郎', orders: 15, books: 42, region: '東京都' },
-      { memberId: 'M23456', name: '佐藤花子', orders: 12, books: 35, region: '大阪府' },
-      { memberId: 'M34567', name: '鈴木一郎', orders: 11, books: 31, region: '神奈川県' },
-      { memberId: 'M45678', name: '田中美咲', orders: 9, books: 24, region: '愛知県' },
-      { memberId: 'M56789', name: '高橋健太', orders: 8, books: 22, region: '福岡県' }
-    ];
-
-    let selectedBookForRegion = null;
+    let products = [];
+    let currentTab = 'daily';
+    let selectedImageData = null;
 
     // Initialize
-    function init() {
+    async function init() {
       // Set default dates
       document.getElementById('filterStartDate').value = todayStr;
       document.getElementById('filterEndDate').value = todayStr;
       document.getElementById('productStartDate').value = todayStr;
       
-      renderProductTable();
-      renderDailyTable();
-      renderByBookTable();
-      renderByMemberTable();
+      await loadDashboard();
+      await loadProducts();
+      await loadAnalytics();
     }
 
     // Login
-    function handleLogin(e) {
+    async function handleLogin(e) {
       e.preventDefault();
       const password = document.getElementById('loginPassword').value;
+      const loginBtn = document.getElementById('loginBtn');
+      const loginError = document.getElementById('loginError');
       
-      if (password === 'admin123') {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('mainApp').classList.add('active');
-        init();
-      } else {
-        alert('パスワードが正しくありません');
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'ログイン中...';
+      loginError.style.display = 'none';
+      
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'adminLogin', password: password })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          document.getElementById('loginScreen').style.display = 'none';
+          document.getElementById('mainApp').classList.add('active');
+          init();
+        } else {
+          loginError.textContent = result.error;
+          loginError.style.display = 'block';
+        }
+      } catch (error) {
+        loginError.textContent = 'ログインに失敗しました';
+        loginError.style.display = 'block';
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'ログイン';
       }
     }
 
@@ -1805,6 +1725,232 @@
       document.getElementById('mainApp').classList.remove('active');
       document.getElementById('loginScreen').style.display = 'flex';
       document.getElementById('loginPassword').value = '';
+    }
+
+    // Dashboard
+    async function loadDashboard() {
+      try {
+        const response = await fetch(`${API_URL}?action=getAnalytics&type=daily&startDate=${todayStr}&endDate=${todayStr}`);
+        const result = await response.json();
+        
+        if (result.success && result.data.length > 0) {
+          document.getElementById('statOrders').textContent = result.data[0].orders;
+          document.getElementById('statBooks').textContent = result.data[0].books;
+        } else {
+          document.getElementById('statOrders').textContent = '0';
+          document.getElementById('statBooks').textContent = '0';
+        }
+      } catch (error) {
+        console.error('Error loading dashboard:', error);
+      }
+      
+      // Load recent orders would require additional API endpoint
+      document.getElementById('recentOrdersList').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-light);">最近の申込がありません</div>';
+    }
+
+    // Products
+    async function loadProducts() {
+      try {
+        const response = await fetch(`${API_URL}?action=getAdminBooks`);
+        const result = await response.json();
+        
+        if (result.success) {
+          products = result.books;
+          document.getElementById('statActiveBooks').textContent = products.filter(p => p.status === '受付中').length;
+          renderProductTable();
+        }
+      } catch (error) {
+        console.error('Error loading products:', error);
+      }
+    }
+
+    function renderProductTable() {
+      const tbody = document.getElementById('productTableBody');
+      
+      if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem;">登録された商品がありません</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = products.map(product => {
+        const endDateStr = product.endDate ? formatDate(product.endDate) : '無期限';
+        const weekdayStr = product.weekdayLimit ? `${product.weekdayLimit}冊` : '上限なし';
+        const weekendStr = product.weekendLimit ? `${product.weekendLimit}冊` : '上限なし';
+        const personStr = product.personLimit ? `${product.personLimit}冊` : '上限なし';
+        const isActive = product.status === '受付中';
+        
+        return `
+          <tr>
+            <td>
+              <div class="product-thumb">
+                ${product.imageUrl 
+                  ? `<img src="${product.imageUrl}" alt="" onerror="this.parentElement.textContent='${product.title.substring(0, 4)}'">`
+                  : product.title.substring(0, 4)
+                }
+              </div>
+            </td>
+            <td>${product.title}</td>
+            <td>${formatDate(product.startDate)} 〜 ${endDateStr}</td>
+            <td>${weekdayStr}</td>
+            <td>${weekendStr}</td>
+            <td>${personStr}</td>
+            <td><span class="status-badge ${isActive ? 'active' : 'inactive'}">${product.status}</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="action-btn edit" onclick="editProduct(${product.id})">編集</button>
+                <button class="action-btn toggle" onclick="toggleProductStatus(${product.id})">${isActive ? '停止' : '再開'}</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      return `${d.getMonth() + 1}/${d.getDate()}`;
+    }
+
+    // Product Modal
+    function openProductModal() {
+      document.getElementById('productModalTitle').textContent = '商品を登録';
+      document.getElementById('productForm').reset();
+      document.getElementById('productStartDate').value = todayStr;
+      document.getElementById('editingBookId').value = '';
+      document.getElementById('imagePreview').style.display = 'none';
+      selectedImageData = null;
+      document.getElementById('productModal').classList.add('active');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productModal').classList.remove('active');
+    }
+
+    function editProduct(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+
+      document.getElementById('productModalTitle').textContent = '商品を編集';
+      document.getElementById('editingBookId').value = id;
+      document.getElementById('productTitle').value = product.title;
+      document.getElementById('productLink').value = product.link || '';
+      document.getElementById('productStartDate').value = product.startDate;
+      document.getElementById('productEndDate').value = product.endDate || '';
+      document.getElementById('productWeekdayLimit').value = product.weekdayLimit || '';
+      document.getElementById('productWeekendLimit').value = product.weekendLimit || '';
+      document.getElementById('productPersonLimit').value = product.personLimit || '';
+      
+      if (product.imageUrl) {
+        document.getElementById('imagePreview').src = product.imageUrl;
+        document.getElementById('imagePreview').style.display = 'block';
+      }
+      
+      document.getElementById('productModal').classList.add('active');
+    }
+
+    async function toggleProductStatus(id) {
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'toggleBookStatus', bookId: id })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          await loadProducts();
+        } else {
+          alert(result.error);
+        }
+      } catch (error) {
+        console.error('Error toggling status:', error);
+        alert('ステータスの変更に失敗しました');
+      }
+    }
+
+    function previewImage(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.getElementById('imagePreview');
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          selectedImageData = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function handleProductSubmit(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('productSubmitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '送信中...';
+      
+      const editingId = document.getElementById('editingBookId').value;
+      const isEditing = !!editingId;
+      
+      let imageUrl = '';
+      
+      // Upload image if selected
+      if (selectedImageData) {
+        try {
+          const uploadResponse = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: 'uploadImage',
+              imageData: selectedImageData,
+              fileName: `book_${Date.now()}.jpg`
+            })
+          });
+          const uploadResult = await uploadResponse.json();
+          
+          if (uploadResult.success) {
+            imageUrl = uploadResult.imageUrl;
+          } else {
+            console.warn('Image upload failed:', uploadResult.error);
+          }
+        } catch (error) {
+          console.warn('Image upload error:', error);
+        }
+      }
+      
+      const data = {
+        action: isEditing ? 'updateBook' : 'registerBook',
+        bookId: isEditing ? parseInt(editingId) : null,
+        title: document.getElementById('productTitle').value,
+        link: document.getElementById('productLink').value,
+        imageUrl: imageUrl,
+        startDate: document.getElementById('productStartDate').value,
+        endDate: document.getElementById('productEndDate').value || null,
+        weekdayLimit: document.getElementById('productWeekdayLimit').value ? parseInt(document.getElementById('productWeekdayLimit').value) : null,
+        weekendLimit: document.getElementById('productWeekendLimit').value ? parseInt(document.getElementById('productWeekendLimit').value) : null,
+        personLimit: document.getElementById('productPersonLimit').value ? parseInt(document.getElementById('productPersonLimit').value) : null
+      };
+      
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          closeProductModal();
+          await loadProducts();
+          alert(isEditing ? '商品を更新しました' : '商品を登録しました');
+        } else {
+          alert(result.error);
+        }
+      } catch (error) {
+        console.error('Error submitting product:', error);
+        alert('商品の登録に失敗しました');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '登録する';
+      }
     }
 
     // Navigation
@@ -1828,105 +1974,111 @@
       document.getElementById('sidebarOverlay').classList.toggle('active');
     }
 
-    // Product Table
-    function renderProductTable() {
-      const tbody = document.getElementById('productTableBody');
-      tbody.innerHTML = sampleProducts.map(product => {
-        const endDateStr = product.endDate ? formatDate(product.endDate) : '無期限';
-        const weekdayStr = product.weekdayLimit ? `${product.weekdayLimit}冊` : '上限なし';
-        const weekendStr = product.weekendLimit ? `${product.weekendLimit}冊` : '上限なし';
-        const personStr = product.personLimit ? `${product.personLimit}冊` : '上限なし';
-        
-        return `
-          <tr>
-            <td><div class="product-thumb" style="background: ${product.color};">${product.title.substring(0, 4)}</div></td>
-            <td>${product.title}</td>
-            <td>${formatDate(product.startDate)} 〜 ${endDateStr}</td>
-            <td>${weekdayStr}</td>
-            <td>${weekendStr}</td>
-            <td>${personStr}</td>
-            <td><span class="status-badge ${product.status}">${product.status === 'active' ? '受付中' : '停止中'}</span></td>
-            <td>
-              <div class="action-btns">
-                <button class="action-btn edit" onclick="editProduct(${product.id})">
-                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                  </svg>
-                  編集
-                </button>
-                <button class="action-btn delete" onclick="toggleProductStatus(${product.id})">
-                  ${product.status === 'active' ? '停止' : '再開'}
-                </button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function formatDate(dateStr) {
-      if (!dateStr) return '';
-      const d = new Date(dateStr);
-      return `${d.getMonth() + 1}/${d.getDate()}`;
-    }
-
-    // Product Modal
-    function openProductModal() {
-      document.getElementById('productModalTitle').textContent = '商品を登録';
-      document.getElementById('productForm').reset();
-      document.getElementById('productStartDate').value = todayStr;
-      document.getElementById('imagePreview').style.display = 'none';
-      document.getElementById('productModal').classList.add('active');
-    }
-
-    function closeProductModal() {
-      document.getElementById('productModal').classList.remove('active');
-    }
-
-    function editProduct(id) {
-      const product = sampleProducts.find(p => p.id === id);
-      if (!product) return;
-
-      document.getElementById('productModalTitle').textContent = '商品を編集';
-      document.getElementById('productTitle').value = product.title;
-      document.getElementById('productStartDate').value = product.startDate;
-      document.getElementById('productEndDate').value = product.endDate || '';
-      document.getElementById('productWeekdayLimit').value = product.weekdayLimit || '';
-      document.getElementById('productWeekendLimit').value = product.weekendLimit || '';
-      document.getElementById('productPersonLimit').value = product.personLimit || '';
-      
-      document.getElementById('productModal').classList.add('active');
-    }
-
-    function toggleProductStatus(id) {
-      const product = sampleProducts.find(p => p.id === id);
-      if (product) {
-        product.status = product.status === 'active' ? 'inactive' : 'active';
-        renderProductTable();
-      }
-    }
-
-    function previewImage(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const preview = document.getElementById('imagePreview');
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function handleProductSubmit(e) {
-      e.preventDefault();
-      alert('商品を登録しました！（デモ）');
-      closeProductModal();
-    }
-
     // Analytics
+    async function loadAnalytics() {
+      const startDate = document.getElementById('filterStartDate').value;
+      const endDate = document.getElementById('filterEndDate').value;
+      
+      await loadDailyAnalytics(startDate, endDate);
+      await loadByBookAnalytics(startDate, endDate);
+      await loadByMemberAnalytics(startDate, endDate);
+    }
+
+    async function loadDailyAnalytics(startDate, endDate) {
+      try {
+        const response = await fetch(`${API_URL}?action=getAnalytics&type=daily&startDate=${startDate}&endDate=${endDate}`);
+        const result = await response.json();
+        
+        const tbody = document.getElementById('dailyTableBody');
+        if (result.success && result.data.length > 0) {
+          tbody.innerHTML = result.data.map(row => `
+            <tr>
+              <td>${row.date}</td>
+              <td>${row.orders}件</td>
+              <td>${row.books}冊</td>
+            </tr>
+          `).join('');
+        } else {
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem;">データがありません</td></tr>';
+        }
+      } catch (error) {
+        console.error('Error loading daily analytics:', error);
+      }
+    }
+
+    async function loadByBookAnalytics(startDate, endDate) {
+      try {
+        const response = await fetch(`${API_URL}?action=getAnalytics&type=byBook&startDate=${startDate}&endDate=${endDate}`);
+        const result = await response.json();
+        
+        const tbody = document.getElementById('byBookTableBody');
+        if (result.success && result.data.length > 0) {
+          tbody.innerHTML = result.data.map(row => `
+            <tr class="clickable" onclick="loadRegionBreakdown(${row.bookId}, '${row.title}')">
+              <td>${row.title}</td>
+              <td>${row.orders}件</td>
+              <td>${row.books}冊</td>
+            </tr>
+          `).join('');
+        } else {
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem;">データがありません</td></tr>';
+        }
+      } catch (error) {
+        console.error('Error loading book analytics:', error);
+      }
+    }
+
+    async function loadRegionBreakdown(bookId, bookTitle) {
+      const startDate = document.getElementById('filterStartDate').value;
+      const endDate = document.getElementById('filterEndDate').value;
+      
+      try {
+        const response = await fetch(`${API_URL}?action=getRegionBreakdown&bookId=${bookId}&startDate=${startDate}&endDate=${endDate}`);
+        const result = await response.json();
+        
+        if (result.success) {
+          document.getElementById('regionBookTitle').textContent = `地域別内訳：${bookTitle}`;
+          document.getElementById('regionGrid').innerHTML = result.regions.map(r => `
+            <div class="region-item">
+              <div class="region-name">${r.region}</div>
+              <div class="region-count">${r.count}</div>
+            </div>
+          `).join('');
+          document.getElementById('regionBreakdown').classList.add('active');
+          
+          // Highlight selected row
+          document.querySelectorAll('#byBookTableBody tr').forEach(tr => tr.classList.remove('selected'));
+          event.currentTarget.classList.add('selected');
+        }
+      } catch (error) {
+        console.error('Error loading region breakdown:', error);
+      }
+    }
+
+    async function loadByMemberAnalytics(startDate, endDate) {
+      try {
+        const response = await fetch(`${API_URL}?action=getAnalytics&type=byMember&startDate=${startDate}&endDate=${endDate}`);
+        const result = await response.json();
+        
+        const tbody = document.getElementById('byMemberTableBody');
+        if (result.success && result.data.length > 0) {
+          tbody.innerHTML = result.data.map(row => `
+            <tr>
+              <td>${row.memberId}</td>
+              <td>${row.name}</td>
+              <td>${row.orders}回</td>
+              <td>${row.books}冊</td>
+              <td>${row.mainRegion}</td>
+            </tr>
+          `).join('');
+        } else {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">データがありません</td></tr>';
+        }
+      } catch (error) {
+        console.error('Error loading member analytics:', error);
+      }
+    }
+
     function showAnalyticsTab(tabId, clickedTab) {
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       clickedTab.classList.add('active');
@@ -1934,69 +2086,11 @@
       document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
       document.getElementById(`tab-${tabId}`).style.display = 'block';
 
-      // Reset region breakdown when switching tabs
       if (tabId !== 'byBook') {
         document.getElementById('regionBreakdown').classList.remove('active');
-        selectedBookForRegion = null;
       }
-    }
-
-    function renderDailyTable() {
-      const tbody = document.getElementById('dailyTableBody');
-      tbody.innerHTML = sampleDailyData.map(row => `
-        <tr>
-          <td>${row.date}</td>
-          <td>${row.orders}件</td>
-          <td>${row.books}冊</td>
-        </tr>
-      `).join('');
-    }
-
-    function renderByBookTable() {
-      const tbody = document.getElementById('byBookTableBody');
-      tbody.innerHTML = sampleBookData.map(row => `
-        <tr class="clickable" onclick="selectBookForRegion(${row.id})">
-          <td>${row.title}</td>
-          <td>${row.orders}件</td>
-          <td>${row.books}冊</td>
-        </tr>
-      `).join('');
-    }
-
-    function selectBookForRegion(bookId) {
-      const book = sampleBookData.find(b => b.id === bookId);
-      if (!book) return;
-
-      selectedBookForRegion = bookId;
-
-      // Highlight selected row
-      document.querySelectorAll('#byBookTableBody tr').forEach(tr => tr.classList.remove('selected'));
-      event.currentTarget.classList.add('selected');
-
-      // Show region breakdown
-      document.getElementById('regionBookTitle').textContent = `地域別内訳：${book.title}`;
-      const regionGrid = document.getElementById('regionGrid');
-      regionGrid.innerHTML = Object.entries(book.regions).map(([region, count]) => `
-        <div class="region-item">
-          <div class="region-name">${region}</div>
-          <div class="region-count">${count}</div>
-        </div>
-      `).join('');
-
-      document.getElementById('regionBreakdown').classList.add('active');
-    }
-
-    function renderByMemberTable() {
-      const tbody = document.getElementById('byMemberTableBody');
-      tbody.innerHTML = sampleMemberData.map(row => `
-        <tr>
-          <td>${row.memberId}</td>
-          <td>${row.name}</td>
-          <td>${row.orders}回</td>
-          <td>${row.books}冊</td>
-          <td>${row.region}</td>
-        </tr>
-      `).join('');
+      
+      currentTab = tabId;
     }
 
     // Close modal on overlay click
