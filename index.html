@@ -1283,6 +1283,17 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" onclick="showPage('members')">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            会員一覧
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" onclick="showPage('analytics')">
             <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="18" y1="20" x2="18" y2="10"></line>
@@ -1450,6 +1461,89 @@
               <tbody id="productTableBody">
                 <tr>
                   <td colspan="8">
+                    <div class="loading">
+                      <div class="loading-spinner"></div>
+                      <div>読み込み中...</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Members Page -->
+      <div class="page-content" id="page-members">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1 class="page-title">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              会員一覧
+            </h1>
+            <p class="page-subtitle">受付対象の会員を確認</p>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="margin-bottom: 1.5rem;">
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <div class="stat-value" id="statTotalMembers">-</div>
+            <div class="stat-label">受付対象会員数</div>
+          </div>
+        </div>
+
+        <!-- 検索 -->
+        <div class="analytics-filters" style="margin-bottom: 1.5rem;">
+          <div class="filter-group" style="flex: 1;">
+            <label>
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              会員番号で検索
+            </label>
+            <input type="text" id="memberSearchInput" placeholder="会員番号を入力..." oninput="filterMembers()">
+          </div>
+          <button class="filter-btn" onclick="clearMemberSearch()" style="background: var(--text-light);">
+            クリア
+          </button>
+        </div>
+
+        <div class="product-list">
+          <div class="product-list-header">
+            <div class="product-list-title">
+              <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+              </svg>
+              受付対象会員一覧
+              <span id="filteredCount" style="font-weight: 400; color: var(--text-light); font-size: 0.85rem; margin-left: 0.5rem;"></span>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="product-table">
+              <thead>
+                <tr>
+                  <th>会員番号</th>
+                  <th>名前</th>
+                  <th>紹介者</th>
+                </tr>
+              </thead>
+              <tbody id="membersTableBody">
+                <tr>
+                  <td colspan="3">
                     <div class="loading">
                       <div class="loading-spinner"></div>
                       <div>読み込み中...</div>
@@ -1748,6 +1842,64 @@
       document.getElementById('recentOrdersList').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-light);">最近の申込がありません</div>';
     }
 
+    // Members
+    let allMembers = [];
+    
+    async function loadMembers() {
+      try {
+        const response = await fetch(`${API_URL}?action=getActiveMembers`);
+        const result = await response.json();
+        
+        if (result.success) {
+          allMembers = result.members;
+          document.getElementById('statTotalMembers').textContent = result.total;
+          renderMembersTable(result.members);
+        }
+      } catch (error) {
+        console.error('Error loading members:', error);
+      }
+    }
+    
+    function filterMembers() {
+      const query = document.getElementById('memberSearchInput').value.trim().toLowerCase();
+      
+      if (!query) {
+        renderMembersTable(allMembers);
+        document.getElementById('filteredCount').textContent = '';
+        return;
+      }
+      
+      const filtered = allMembers.filter(m => 
+        m.memberId.toLowerCase().includes(query)
+      );
+      
+      renderMembersTable(filtered);
+      document.getElementById('filteredCount').textContent = `（検索結果: ${filtered.length}件）`;
+    }
+    
+    function clearMemberSearch() {
+      document.getElementById('memberSearchInput').value = '';
+      document.getElementById('filteredCount').textContent = '';
+      renderMembersTable(allMembers);
+    }
+    
+    function renderMembersTable(members) {
+      const tbody = document.getElementById('membersTableBody');
+      
+      if (members.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem;">該当する会員がいません</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = members.map(member => `
+        <tr>
+          <td>${member.memberId}</td>
+          <td>${member.name}</td>
+          <td>${member.introducer}</td>
+        </tr>
+      `).join('');
+    }
+
     // Products
     async function loadProducts() {
       try {
@@ -1957,7 +2109,13 @@
     function showPage(pageId) {
       document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(link => {
-        if (link.textContent.includes(pageId === 'dashboard' ? 'ダッシュボード' : pageId === 'products' ? '商品の登録・編集' : '集計一覧')) {
+        const linkText = link.textContent.trim();
+        if (
+          (pageId === 'dashboard' && linkText.includes('ダッシュボード')) ||
+          (pageId === 'products' && linkText.includes('商品の登録・編集')) ||
+          (pageId === 'members' && linkText.includes('会員一覧')) ||
+          (pageId === 'analytics' && linkText.includes('集計一覧'))
+        ) {
           link.classList.add('active');
         }
       });
@@ -1967,6 +2125,11 @@
 
       document.getElementById('sidebar').classList.remove('active');
       document.getElementById('sidebarOverlay').classList.remove('active');
+      
+      // 会員一覧ページを開いた時にデータを読み込む
+      if (pageId === 'members') {
+        loadMembers();
+      }
     }
 
     function toggleSidebar() {
