@@ -1710,7 +1710,7 @@
                   </svg>
                 </div>
                 <div class="image-upload-text" id="uploadText">クリックで画像をアップロード<br>JPG, PNG形式</div>
-                <img class="image-preview" id="imagePreview" alt="プレビュー" style="display: none;">
+                <img class="image-preview" id="imagePreview" alt="プレビュー" style="display: none;" referrerpolicy="no-referrer">
               </div>
               <input type="file" id="productImage" accept="image/*" style="display: none" onchange="previewImage(event)">
             </div>
@@ -1940,7 +1940,7 @@
             <td>
               <div class="product-thumb">
                 ${product.imageUrl 
-                  ? `<img src="${product.imageUrl}" alt="" onerror="this.parentElement.textContent='${product.title.substring(0, 4)}'">`
+                  ? `<img src="${product.imageUrl}" alt="" referrerpolicy="no-referrer" onerror="this.parentElement.textContent='${product.title.substring(0, 4)}'">`
                   : product.title.substring(0, 4)
                 }
               </div>
