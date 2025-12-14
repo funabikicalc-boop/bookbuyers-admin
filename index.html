@@ -384,6 +384,7 @@
     .stat-icon.yellow { background: var(--primary); color: var(--text); }
     .stat-icon.green { background: rgba(124, 184, 124, 0.2); color: #5a9a5a; }
     .stat-icon.orange { background: rgba(212, 165, 116, 0.2); color: var(--accent-dark); }
+    .stat-icon.blue { background: rgba(100, 181, 246, 0.2); color: #1976d2; }
 
     .stat-value {
       font-size: 2rem;
@@ -1372,7 +1373,7 @@
               <polyline points="15 3 21 3 21 9"></polyline>
               <line x1="10" y1="14" x2="21" y2="3"></line>
             </svg>
-            会員側を確認
+            申込画面を確認
           </a>
         </li>
       </ul>
@@ -1666,6 +1667,7 @@
           <button class="tab active" onclick="showAnalyticsTab('daily', this)">日別</button>
           <button class="tab" onclick="showAnalyticsTab('byBook', this)">本別</button>
           <button class="tab" onclick="showAnalyticsTab('byMember', this)">会員別</button>
+          <button class="tab" onclick="showAnalyticsTab('byRegion', this)">都道府県別</button>
         </div>
 
         <!-- Daily Tab -->
@@ -1732,6 +1734,55 @@
                 <tr><td colspan="5" class="loading">読み込み中...</td></tr>
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- By Region Tab -->
+        <div class="tab-content" id="tab-byRegion" style="display: none;">
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>本を選択</label>
+            <select id="regionBookSelect" onchange="loadRegionData()">
+              <option value="">-- 本を選択してください --</option>
+            </select>
+          </div>
+          
+          <div id="regionDataContainer" style="display: none;">
+            <div class="stats-grid" style="margin-bottom: 1rem;">
+              <div class="stat-card">
+                <div class="stat-icon blue">
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </div>
+                <div class="stat-value" id="regionPrefCount">-</div>
+                <div class="stat-label">都道府県数</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon green">
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  </svg>
+                </div>
+                <div class="stat-value" id="regionTotalBooks">-</div>
+                <div class="stat-label">総冊数</div>
+              </div>
+            </div>
+            
+            <div class="analytics-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>都道府県</th>
+                    <th>冊数</th>
+                    <th>割合</th>
+                  </tr>
+                </thead>
+                <tbody id="regionTableBody">
+                  <tr><td colspan="3" class="loading">本を選択してください</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -2368,6 +2419,12 @@
       await loadDailyAnalytics(startDate, endDate);
       await loadByBookAnalytics(startDate, endDate);
       await loadByMemberAnalytics(startDate, endDate);
+      
+      // 都道府県別タブで本が選択されていれば再読み込み
+      const regionBookSelect = document.getElementById('regionBookSelect');
+      if (regionBookSelect && regionBookSelect.value) {
+        loadRegionData();
+      }
     }
 
     async function loadDailyAnalytics(startDate, endDate) {
@@ -2476,7 +2533,92 @@
         document.getElementById('regionBreakdown').classList.remove('active');
       }
       
+      // 都道府県別タブの場合、本のリストを読み込む
+      if (tabId === 'byRegion') {
+        loadRegionBookList();
+      }
+      
       currentTab = tabId;
+    }
+    
+    // 都道府県別タブ用: 本のリストを読み込む
+    async function loadRegionBookList() {
+      const select = document.getElementById('regionBookSelect');
+      
+      // 既に読み込み済みなら何もしない
+      if (select.options.length > 1) return;
+      
+      try {
+        const response = await fetch(`${API_URL}?action=getAdminBooks`);
+        const result = await response.json();
+        
+        if (result.success) {
+          result.books.forEach(book => {
+            const option = document.createElement('option');
+            option.value = book.id;
+            option.textContent = book.title;
+            select.appendChild(option);
+          });
+        }
+      } catch (error) {
+        console.error('Error loading book list:', error);
+      }
+    }
+    
+    // 都道府県別タブ用: 選択した本の地域データを読み込む
+    async function loadRegionData() {
+      const bookId = document.getElementById('regionBookSelect').value;
+      const container = document.getElementById('regionDataContainer');
+      const tbody = document.getElementById('regionTableBody');
+      
+      if (!bookId) {
+        container.style.display = 'none';
+        return;
+      }
+      
+      container.style.display = 'block';
+      tbody.innerHTML = '<tr><td colspan="3" class="loading">読み込み中...</td></tr>';
+      
+      const startDate = document.getElementById('filterStartDate').value;
+      const endDate = document.getElementById('filterEndDate').value;
+      
+      try {
+        const response = await fetch(`${API_URL}?action=getRegionBreakdown&bookId=${bookId}&startDate=${startDate}&endDate=${endDate}`);
+        const result = await response.json();
+        
+        if (result.success && result.regions && result.regions.length > 0) {
+          // 総冊数を計算
+          const totalBooks = result.regions.reduce((sum, item) => sum + item.count, 0);
+          
+          document.getElementById('regionPrefCount').textContent = result.regions.length;
+          document.getElementById('regionTotalBooks').textContent = totalBooks;
+          
+          tbody.innerHTML = result.regions.map(item => {
+            const percentage = ((item.count / totalBooks) * 100).toFixed(1);
+            return `
+              <tr>
+                <td>${item.region}</td>
+                <td>${item.count}冊</td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="flex: 1; background: #eee; border-radius: 4px; height: 8px; overflow: hidden;">
+                      <div style="width: ${percentage}%; background: var(--primary); height: 100%;"></div>
+                    </div>
+                    <span style="min-width: 50px; text-align: right;">${percentage}%</span>
+                  </div>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        } else {
+          document.getElementById('regionPrefCount').textContent = '0';
+          document.getElementById('regionTotalBooks').textContent = '0';
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem;">データがありません</td></tr>';
+        }
+      } catch (error) {
+        console.error('Error loading region data:', error);
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem;">読み込みに失敗しました</td></tr>';
+      }
     }
 
     // Close modal on overlay click
