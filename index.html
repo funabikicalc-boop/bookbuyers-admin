@@ -1929,8 +1929,37 @@
         console.error('Error loading dashboard:', error);
       }
       
-      // Load recent orders would require additional API endpoint
-      document.getElementById('recentOrdersList').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-light);">最近の申込がありません</div>';
+      // 最近の申込を取得
+      try {
+        const response = await fetch(`${API_URL}?action=getRecentOrders&limit=10`);
+        const result = await response.json();
+        
+        if (result.success && result.orders.length > 0) {
+          document.getElementById('recentOrdersList').innerHTML = result.orders.map(order => `
+            <div class="activity-item">
+              <div class="activity-avatar">${order.memberName ? order.memberName.charAt(0) : '?'}</div>
+              <div class="activity-info">
+                <div class="activity-text">
+                  <strong>${order.memberName || order.memberId}</strong> が「${order.bookTitle}」を <strong>${order.quantity}冊</strong> 申込
+                </div>
+                <div class="activity-time">
+                  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  ${order.datetime} / ${order.prefecture}
+                </div>
+              </div>
+              <span class="activity-badge new">${order.quantity}冊</span>
+            </div>
+          `).join('');
+        } else {
+          document.getElementById('recentOrdersList').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-light);">最近の申込がありません</div>';
+        }
+      } catch (error) {
+        console.error('Error loading recent orders:', error);
+        document.getElementById('recentOrdersList').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-light);">読み込みに失敗しました</div>';
+      }
     }
 
     // Members
