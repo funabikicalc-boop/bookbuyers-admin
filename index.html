@@ -709,6 +709,11 @@
       color: #1976d2;
     }
 
+    .action-btn.delete {
+      background: rgba(229, 115, 115, 0.2);
+      color: #c74747;
+    }
+
     /* Modal */
     .modal-overlay {
       position: fixed;
@@ -1697,18 +1702,17 @@
             <div class="form-group">
               <label>表紙画像 <span class="required">*</span></label>
               <div class="image-upload" onclick="document.getElementById('productImage').click()">
-                <div class="image-upload-icon">
+                <div class="image-upload-icon" id="uploadIcon">
                   <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                     <circle cx="8.5" cy="8.5" r="1.5"></circle>
                     <polyline points="21 15 16 10 5 21"></polyline>
                   </svg>
                 </div>
-                <div class="image-upload-text">クリックで画像をアップロード<br>JPG, PNG形式</div>
-                <img class="image-preview" id="imagePreview" alt="プレビュー">
+                <div class="image-upload-text" id="uploadText">クリックで画像をアップロード<br>JPG, PNG形式</div>
+                <img class="image-preview" id="imagePreview" alt="プレビュー" style="display: none;">
               </div>
               <input type="file" id="productImage" accept="image/*" style="display: none" onchange="previewImage(event)">
-              <div class="form-hint">※画像保存用フォルダが未設定の場合、画像はアップロードできません</div>
             </div>
           </div>
 
@@ -1950,7 +1954,8 @@
             <td>
               <div class="action-btns">
                 <button class="action-btn edit" onclick="editProduct(${product.id})">編集</button>
-                <button class="action-btn toggle" onclick="toggleProductStatus(${product.id})">${isActive ? '停止' : '再開'}</button>
+                <button class="action-btn toggle" onclick="toggleProductStatus(${product.id}, '${product.title}')">${isActive ? '停止' : '再開'}</button>
+                <button class="action-btn delete" onclick="deleteProduct(${product.id}, '${product.title.replace(/'/g, "\\'")}')">削除</button>
               </div>
             </td>
           </tr>
@@ -1970,8 +1975,7 @@
       document.getElementById('productForm').reset();
       document.getElementById('productStartDate').value = todayStr;
       document.getElementById('editingBookId').value = '';
-      document.getElementById('imagePreview').style.display = 'none';
-      selectedImageData = null;
+      resetImageUpload();
       document.getElementById('productModal').classList.add('active');
     }
 
@@ -1993,15 +1997,26 @@
       document.getElementById('productWeekendLimit').value = product.weekendLimit || '';
       document.getElementById('productPersonLimit').value = product.personLimit || '';
       
+      // 画像プレビュー
+      resetImageUpload();
       if (product.imageUrl) {
         document.getElementById('imagePreview').src = product.imageUrl;
         document.getElementById('imagePreview').style.display = 'block';
+        document.getElementById('uploadIcon').style.display = 'none';
+        document.getElementById('uploadText').style.display = 'none';
       }
       
       document.getElementById('productModal').classList.add('active');
     }
 
-    async function toggleProductStatus(id) {
+    async function toggleProductStatus(id, title) {
+      const product = products.find(p => p.id === id);
+      const newStatus = product.status === '受付中' ? '停止' : '再開';
+      
+      if (!confirm(`「${title}」を${newStatus}しますか？`)) {
+        return;
+      }
+      
       try {
         const response = await fetch(API_URL, {
           method: 'POST',
@@ -2010,6 +2025,7 @@
         const result = await response.json();
         
         if (result.success) {
+          alert(`「${title}」を${newStatus}しました`);
           await loadProducts();
         } else {
           alert(result.error);
@@ -2017,6 +2033,30 @@
       } catch (error) {
         console.error('Error toggling status:', error);
         alert('ステータスの変更に失敗しました');
+      }
+    }
+    
+    async function deleteProduct(id, title) {
+      if (!confirm(`「${title}」を削除しますか？\nこの操作は取り消せません。`)) {
+        return;
+      }
+      
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'deleteBook', bookId: id })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          alert(`「${title}」を削除しました`);
+          await loadProducts();
+        } else {
+          alert(result.error);
+        }
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        alert('商品の削除に失敗しました');
       }
     }
 
@@ -2028,10 +2068,21 @@
           const preview = document.getElementById('imagePreview');
           preview.src = e.target.result;
           preview.style.display = 'block';
+          document.getElementById('uploadIcon').style.display = 'none';
+          document.getElementById('uploadText').style.display = 'none';
           selectedImageData = e.target.result;
         };
         reader.readAsDataURL(file);
       }
+    }
+    
+    function resetImageUpload() {
+      document.getElementById('imagePreview').style.display = 'none';
+      document.getElementById('imagePreview').src = '';
+      document.getElementById('uploadIcon').style.display = 'block';
+      document.getElementById('uploadText').style.display = 'block';
+      document.getElementById('productImage').value = '';
+      selectedImageData = null;
     }
 
     async function handleProductSubmit(e) {
