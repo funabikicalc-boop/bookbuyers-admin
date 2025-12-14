@@ -2097,7 +2097,15 @@
       
       let imageUrl = '';
       
-      // Upload image if selected
+      // 編集時は既存の画像URLを取得
+      if (isEditing) {
+        const existingProduct = products.find(p => p.id === parseInt(editingId));
+        if (existingProduct && existingProduct.imageUrl) {
+          imageUrl = existingProduct.imageUrl;
+        }
+      }
+      
+      // 新しい画像が選択された場合はアップロード
       if (selectedImageData) {
         try {
           const uploadResponse = await fetch(API_URL, {
@@ -2114,9 +2122,11 @@
             imageUrl = uploadResult.imageUrl;
           } else {
             console.warn('Image upload failed:', uploadResult.error);
+            alert('画像のアップロードに失敗しました: ' + uploadResult.error);
           }
         } catch (error) {
           console.warn('Image upload error:', error);
+          alert('画像のアップロードに失敗しました');
         }
       }
       
