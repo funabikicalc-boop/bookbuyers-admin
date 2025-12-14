@@ -878,6 +878,11 @@
       cursor: pointer;
       transition: all 0.2s;
       background: var(--primary-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 180px;
     }
 
     .image-upload:hover {
@@ -1208,6 +1213,58 @@
     /* Table Responsive */
     .table-responsive {
       overflow-x: auto;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      background: var(--white);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      z-index: 2000;
+      transform: translateX(calc(100% + 2rem));
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .toast-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .toast-icon.success {
+      background: rgba(124, 184, 124, 0.2);
+      color: #5a9a5a;
+    }
+
+    .toast-icon.error {
+      background: rgba(229, 115, 115, 0.2);
+      color: #c74747;
+    }
+
+    .toast-icon.info {
+      background: rgba(100, 181, 246, 0.2);
+      color: #1976d2;
+    }
+
+    .toast-message {
+      font-weight: 500;
     }
   </style>
 </head>
@@ -1673,6 +1730,12 @@
 
   <!-- Product Modal -->
   <div class="modal-overlay" id="productModal">
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <div class="toast-icon success" id="toastIcon">✓</div>
+    <div class="toast-message" id="toastMessage">完了しました</div>
+  </div>
     <div class="modal">
       <div class="modal-header">
         <div class="modal-title">
@@ -1771,6 +1834,30 @@
     let products = [];
     let currentTab = 'daily';
     let selectedImageData = null;
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastMessage = document.getElementById('toastMessage');
+      
+      toastMessage.textContent = message;
+      toastIcon.className = 'toast-icon ' + type;
+      
+      if (type === 'success') {
+        toastIcon.textContent = '✓';
+      } else if (type === 'error') {
+        toastIcon.textContent = '✕';
+      } else {
+        toastIcon.textContent = 'i';
+      }
+      
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
 
     // Initialize
     async function init() {
@@ -2025,14 +2112,14 @@
         const result = await response.json();
         
         if (result.success) {
-          alert(`「${title}」を${newStatus}しました`);
+          showToast(`「${title}」を${newStatus}しました`, 'success');
           await loadProducts();
         } else {
-          alert(result.error);
+          showToast(result.error, 'error');
         }
       } catch (error) {
         console.error('Error toggling status:', error);
-        alert('ステータスの変更に失敗しました');
+        showToast('ステータスの変更に失敗しました', 'error');
       }
     }
     
@@ -2049,14 +2136,14 @@
         const result = await response.json();
         
         if (result.success) {
-          alert(`「${title}」を削除しました`);
+          showToast(`「${title}」を削除しました`, 'success');
           await loadProducts();
         } else {
-          alert(result.error);
+          showToast(result.error, 'error');
         }
       } catch (error) {
         console.error('Error deleting product:', error);
-        alert('商品の削除に失敗しました');
+        showToast('商品の削除に失敗しました', 'error');
       }
     }
 
@@ -2122,11 +2209,11 @@
             imageUrl = uploadResult.imageUrl;
           } else {
             console.warn('Image upload failed:', uploadResult.error);
-            alert('画像のアップロードに失敗しました: ' + uploadResult.error);
+            showToast('画像のアップロードに失敗しました: ' + uploadResult.error, 'error');
           }
         } catch (error) {
           console.warn('Image upload error:', error);
-          alert('画像のアップロードに失敗しました');
+          showToast('画像のアップロードに失敗しました', 'error');
         }
       }
       
@@ -2153,13 +2240,13 @@
         if (result.success) {
           closeProductModal();
           await loadProducts();
-          alert(isEditing ? '商品を更新しました' : '商品を登録しました');
+          showToast(isEditing ? '商品を更新しました' : '商品を登録しました', 'success');
         } else {
-          alert(result.error);
+          showToast(result.error, 'error');
         }
       } catch (error) {
         console.error('Error submitting product:', error);
-        alert('商品の登録に失敗しました');
+        showToast('商品の登録に失敗しました', 'error');
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = '登録する';
