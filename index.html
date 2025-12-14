@@ -1376,6 +1376,18 @@
             申込画面を確認
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" onclick="updateReports()">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            レポート更新
+          </a>
+        </li>
       </ul>
 
       <button class="logout-btn" onclick="handleLogout()">
@@ -2618,6 +2630,32 @@
       } catch (error) {
         console.error('Error loading region data:', error);
         tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem;">読み込みに失敗しました</td></tr>';
+      }
+    }
+
+    // Update Reports
+    async function updateReports() {
+      if (!confirm('スプレッドシートの「報告表」と「都道府県別」シートを更新しますか？')) {
+        return;
+      }
+      
+      showToast('レポートを更新中...', 'info');
+      
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'updateReports' })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          showToast('レポートを更新しました', 'success');
+        } else {
+          showToast(result.error, 'error');
+        }
+      } catch (error) {
+        console.error('Error updating reports:', error);
+        showToast('レポートの更新に失敗しました', 'error');
       }
     }
 
